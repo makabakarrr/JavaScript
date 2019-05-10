@@ -127,7 +127,7 @@ Person.showName.call(); //输出 "XL" call()里第一个参数为空，默认指
 >
 > 如果把call和apply放在匿名函数后面改变this指向，匿名函数会立即执行
 
-**b.bind() **
+**b.bind()**
 
 ```javascript
 var name="XL";
