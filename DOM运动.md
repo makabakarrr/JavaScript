@@ -227,7 +227,7 @@ function getStyle(ele,attr){
 }
 ```
 
-## 4. 同时改变多属性的运动
+## 5. 同时改变多属性的运动
 
 创建一个对象，放置多个属性和对应的目标值。在函数内部再遍历这个对象，分别使它们到达目标值。代码如下：
 
@@ -303,7 +303,44 @@ function animate(ele,params,speedTime){
 }
 ```
 
-## 5. 反弹运动
+## 6.链式运动
+
+链式运动是在元素的当前运动执行完毕之后再开启下一个运动。因为无法确定详细的结束时间，所以不能使用setTimeout来调用animate函数。想要在运动执行完毕之后开启下一个运动，应该在前一个运动清除定时器的时候同时开启下一个运动。可以在调用animate时传入一个回调函数，在清除定时器的时候调用。但是要注意没有传入回调函数的情况，这个时候说明不需要再开启下一个运动了。代码如下：
+
+```javascript
+function animate(ele,params,speedTime,callBack){
+    clearInterval（ele.timer）;
+    ele.timer = setInterval(function(){
+        var flag = true;
+        for(var attr in params){
+			var current = 0;
+            if(attr = "opacity"){
+			    current = getStyle(ele,attr) * 100;
+            }else{
+                current = parseInt(getStyle(ele,attr))
+            }
+            var speed = (params[attr] - current)/10;
+			speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+            if(current != params[attr]){
+                flag = false;
+            }
+            if(attr == "opacity"){
+                ele.style.opacity = (current + speed)/100;
+            }else{
+                ele.style[attr] = current + speed + "px";
+            }
+        }
+        if(flag){//所有的属性都到达目标值
+            clearInterval(ele.timer);
+            if(callBack){//function的布尔值为true
+				callBack();//如果有回调函数就调用
+            }
+        }
+    },speedTime)
+}
+```
+
+## 7. 反弹运动
 
 下列为小球在浏览器窗口中的反弹运动部分代码。
 
@@ -324,7 +361,7 @@ setInterval(function(){
 },10);
 ```
 
-## 6.自由落体运动
+## 8.自由落体运动
 
 ```javascript
 var timer = setInterval(function(){
@@ -346,7 +383,7 @@ var timer = setInterval(function(){
 },20);
 ```
 
-## 7.抛物线运动
+## 9.抛物线运动
 
 抛物线的运动函数为y = a*x*x + b*x + c，根据三个点可以确定a,b,c的值。
 
